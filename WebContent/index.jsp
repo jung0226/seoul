@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page import="com.bitcamp.freeboard.FreeboardDAO"%>
+<%@page import="com.bitcamp.freeboard.FreeboardVO"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +13,12 @@
 <link rel="stylesheet" href="api/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="api/bootstrap.min.js"></script>
+
+<script src="api/jquery.easing.1.3.js"></script>
+<script src="api/jquery.bxslider.js"></script>
+<link rel="stylesheet" href="api/jquery.bxslider.css" type="text/css"/>
 <style>
+	
 	#divContent{
 		width:800px;
 		margin:0 auto;		
@@ -35,209 +43,283 @@
 	}
 	
 	/*네비게이션*/
+	body, ul, li{
+		margin:0px;
+		padding:0px;
+	}
 	ul{
 		list-style-type:none;
 	}
-	#menu ul, #menu li, #sub ul, #sub li{
-		margin:0px;
-		padding:0px;
-	} 
-	#menu{
-		height:50px;
+	#navDiv{
+		width:800px;
+		margin: 0 auto;
+	}
+	#navi a:link, #navi a:visited{
+		text-decoration:none;
 		color:#fff;
-		background-color:#456;
-		margin:0;
 	}
-	#menu>li{
-		float:left;
-		width:20%;
-		text-align:center;
-		margin:10px 0;
-	}
-	#sub{
-		margin:0;
-		padding:0;
-		position:absolute;
-		background-color:#456;
-		border:1px solid gray;
-	}
-	#sub>li{
-		padding:10px 0;
-		text-align:center;
-	}
-	#sub a:link, #sub  a:visited{
-		text-decoration: none;
-		color:white;
-	}
-	#sub a:hover, #menu li:hover{
+	#navi a:hover{
+		text-decoration:none;
 		color:#f00;
 	}
 	
-	.carousel-inner img{		
-		width:100%;
-		height:350px;
+	#navi{
+		height:50px;
+		color:#fff;
+		background-color:#456;
+	}
+	#navi li{
+		text-align:center;
+		line-height:50px;
+		color:#fff;
+		background-color:#456;
+	}
+	#navi>li{
+		float:left;
+		width:20%;	
+		height:50px;	
+	}
+	#navi>li>ul{
+		display:none;
+		border:1px solid gray;
+		position:relative;
+		z-index:1000;		
+	}
+	/*bxslide*/
+	#bxslider img{
+		width:800px;
+		height:450px;
+	}
+	/*게시판*/
+	h1{
+		color:gray;
+		text-align:center;
 	}
 	
-	
+	#lst>li{
+		float:left;
+		line-height:35px;
+		height:35px; 
+		border-bottom:1px solid gray;
+		width:13%;
+	}
+	/*체크박스*/
+	#lst>li:nth-of-type(6n+1){
+		width:7%;
+	}
+	/*등록일*/
+	#lst>li:nth-of-type(6n-1){
+		width:14%;
+	}
+	#lst>li:nth-of-type(6n+3){
+		width:40%;
+	}
+	/* wordCut */
+	.wordCut{
+		white-space:nowrap;/*줄바꿈 안 함*/		
+		overflow:hidden;/*넘침 숨기기*/
+		text-overflow:ellipsis;/*넘친 부분을 ...으로 표시*/		
+	}
+	#freeboard{
+		background-color: pink;
+	}
+	/*페이지 매기기*/
+	#paging{
+		padding: 10px auto;
+		background-color: yellow;
+	}
+	#paging ul{
+		overFlow:auto;
+		height:80px;
+		width:100%;
+	}
+	#paging li{
+		float:left;
+		width:60px;
+		text-align:center;
+		font-size:1.3em;
+	}
 </style>
 <script>
+	//메뉴
 	$(function(){
 		$('#navi>li').hover(function(){
 			$(this).children('ul').css('display','block');
 		},function(){
 			$(this).children('ul').css('display','none');
 		});
+	
+	
+		//bxslide		
+		$('#bxslider').bxSlider({
+			mode: 'horizontal'
+			, slideWidth:800
+			, slideHeight:350
+			, speed:500 //변환속도
+			, auto:true //자동시작 (true, false(기본))
+			, randomStart:true //시작슬라이드 랜덤(true, false)
+			, captions:true //title속성의 값을 설명으로 표시한다.(true, false)
+			, infiniteLoop: true //반복여부(true, false)
+			, hideControlOnEnd: true//처음과 마지막에 컨트롤러 표시여부 설정(true, false)
+			//easing
+			, useCSS:true //easing사용여부 설정(true(easing안 함), false(easing사용))			
+		});
+	
+		//체크박스
+		$('.checkAll').click(function(){
+			$('.ckbox').prop('checked',this.checked);
+		});
+	
 	});
+	
+	
+	
 </script>
 </head>
 <body>
 <div id="divContent">
 	<div id="loginDiv">
-		<form method="post" id="logFrm "action="loginOk.jsp">
+		<form method="post" id="logFrm" action="loginOk.jsp">
 			<input type="text" name="userid" id="userid" placeholder="아이디"/>
 			<input type="password" name="userpwd" id="userpwd" placeholder="비밀번호"/>
 			<input type="submit" value="로그인"/>
-			<a href="#">회원가입</a>
-			<a href="#">고객센터</a>
+			<a href="signup.jsp">회원가입</a>
+			<a href="center.jsp">고객센터</a>
 		</form>
 	</div>
 	<div id="logoDiv">
 		<a href="https://www.seoul.go.kr/main/index.jsp"><img src="img/seoul.png"/></a>
 	</div>
 	<!-- 메뉴 -->
-	<div id="mainDiv">
-		<header>GIRLSDAILY</header>
+	<div id="navDiv">
 		<ul id="navi">
-			<li><a href="#">OUTER</a>
-				<!-- 서브메뉴 -->
+			<li><a href="#">나의서울</a>
+			</li>
+			<li><a href="#">전자우편</a>
+			</li>
+			<li><a href="#">서울소개</a>
 				<ul>
-					<li><a href="#">가디건</a></li>
-					<li><a href="#">자켓&점퍼</a></li>
-					<li><a href="#">베스트</a></li>
-					<li><a href="#">코트</a></li>
-					<li><a href="#">세일</a></li>
+					<li><a href="#">시청안내</a></li>
+					<li><a href="#">서울의상징</a></li>
+					<li><a href="#">서울의역사</a></li>
+					<li><a href="#">서울정보</a></li>
 				</ul>
 			</li>
-			<li><a href="#">TOP</a>
+			<li><a href="#">시민참여</a>
 				<ul>
-					<li><a href="#">Tea</a></li>
-					<li><a href="#">Cami</a></li>
-					<li><a href="#">Knit</a></li>
-					<li><a href="#">Shirt & Blouse</a></li>
-				</ul>
-			</li>
-			<li><a href="#">DRESS</a>
-				<ul>
-					<li><a href="#">All</a></li>
-					<li><a href="#">바캉스룩</a></li>
-					<li><a href="#">SET</a></li>
-				</ul>
-			</li>
-			<li><a href="#">BOTTOM</a>
-				<ul>
-					<li><a href="#">힐링투엘브</a></li>
-					<li><a href="#">히든밴딩시리즈</a></li>
-					<li><a href="#">스커트</a></li>
+					<li><a href="#">서울시민과의대화</a></li>
+					<li><a href="#">시민의견</a></li>
+					<li><a href="#">공모전</a></li>
 					<li><a href="#">팬츠</a></li>
 				</ul>
 			</li>
-			<li><a href="#">SUMMER</a>
+			<li><a href="#">청사안내</a>
 				<ul>
-					<li><a href="#">HOLI스웸웨어</a></li>
-					<li><a href="#">at 22C</a></li>
-					<li><a href="#">바캉스룩</a></li>
+					<li><a href="#">조직도</a></li>
+					<li><a href="#">시의회</a></li>
+					<li><a href="#">자치구</a></li>
 				</ul>
 			</li>
 		</ul>
-		<img src="../img/3.jpg"/>
 	</div>
-	<!-- 이미지 슬라이드 -->
-	<div class="container">
-		<!-- 											  화면전환 속도 -->
-		<div id="slideImg" class="carousel slide" data-ride="carousel" data-interval="2000"><!-- carousel -->
-			<!-- 하단 컨트롤러 -->
-			<ul class="carousel-indicators">
-				<li data-target="#slideImg" data-slide-to="0" class="active"></li>
-				<li data-target="#slideImg" data-slide-to="1"></li>
-				<li data-target="#slideImg" data-slide-to="2"></li>
-				<li data-target="#slideImg" data-slide-to="3"></li>
-				<li data-target="#slideImg" data-slide-to="4"></li>
-				<li data-target="#slideImg" data-slide-to="5"></li>
-				<li data-target="#slideImg" data-slide-to="6"></li>
-				<li data-target="#slideImg" data-slide-to="7"></li>
+	<!-- bxslide -->
+	<ul id="bxslider">
+		<li><a href="#"><img src="img/banner1.jpg" title="Seoul Music Festival"/></a></li>
+		<li><a href="#"><img src="img/banner2.jpg" title="SIBAC 2019"/></a></li>
+		<li><a href="#"><img src="img/banner3.jpg" title="2019 서울전환도시 국제컨퍼런스"/></a></li>
+		<li><a href="#"><img src="img/banner4.jpg" title="2019 다다다 발표대회"/></a></li>
+		<li><a href="#"><img src="img/banner5.jpg" title="2019 서울인공지능챗본론"/></a></li>
+		<li><a href="#"><img src="img/banner6.jpg" title="서울차 없는 날"/></a></li>
+		<li><a href="#"><img src="img/banner7.jpg" title="Zero 제로페이 미국 캐나다 이벤트"/></a></li>
+		<li><a href="#"><img src="img/banner8.jpg" title="GoGo 페스티벌"/></a></li>
+	</ul>
+	<!-- 게시판 -->
+	
+	<%
+	FreeboardDAO dao = new FreeboardDAO();
+	//--------------------------------------------------
+	int totalRecord = dao.getTotalRecord();	//총 레코드 수
+	int onePageRecord= 5;//한 페이지당 출력할 레코드 수	
+	int nowPage=1;//현재 페이지 번호
+	int totalPage=0; //총 페이지 수 
+	int onePageNum =5;//한번에 표시할 페이지 수
+	int startPage=1; //페이지 번호의 시작 번호
+	//--------------------------------------------------
+	//현재 페이지 정보 구하기
+	String nowPageStr = request.getParameter("nowPage");
+	if(nowPageStr != null){
+		nowPage=Integer.parseInt(nowPageStr);
+	}
+	//홈 페이지 수 계산하기
+	totalPage = (int)Math.ceil(totalRecord/(double)onePageRecord);
+	//페이지번호의 시작 번호 구하기
+	startPage = ((nowPage-1)/onePageNum*onePageNum)+1;
+	
+	//전체레코드 구하기
+	List<FreeboardVO> list = dao.getAllRecord(nowPage, onePageRecord, totalPage, totalRecord);
+	%>
+	<div id="freeboard">
+		<h1>자유게시판</h1>
+		<input type="checkbox" value="전체선택" class="checkAll"/> 전체 선택
+		<ul id="lst">
+			<li></li>
+			<li>번호</li>
+			<li>제목</li>
+			<li>글쓴이</li>
+			<li>등록일</li>
+			<li>조회수</li>
+			<% for(int i=0; i<list.size(); i++){
+				FreeboardVO vo = list.get(i);				
+			%>
+				<li><input type="checkbox" class="ckbox"/></li>
+				<li><%=vo.getNo() %></li>
+				<li class="wordCut"><a href="list.jsp?num=1"><%=vo.getSubject() %></a></li>
+				<li><%=vo.getUserid() %></li>
+				<li><%=vo.getWritedate() %></li>
+				<li><%=vo.getHit() %></li>
+			<%} %>
+		</ul>	
+	</div>
+	<div id="paging">
+			<ul class="pagination">
+				<!-- 이전 페이지 -->				
+				<% if(nowPage==1){ %>
+					<li class="page-item disabled">
+						<a href="#" class="page-link">prev</a>
+				<%} else{%>
+					<li class="page-item"><a href="index.jsp?nowPage=<%=nowPage-1%>" class="page-link">prev</a>
+				<%} %>
+				</li>
+				<!-- 페이지 넘버 매기기 -->
+				<% for(int p=startPage;p<startPage+onePageNum;p++){ 
+					if(p<=totalPage){
+						if(p==nowPage){
+				%>
+					<li class="page-item">
+						<a href="index.jsp?nowPage=<%=p%>" style="color:red" class="page-link"><%=p %></a>
+					</li> 
+				<%		}else{%>
+					<li class="page-item">
+						<a href="index.jsp?nowPage=<%=p%>" class="page-link"><%=p %></a>
+					</li>
+				<%
+						}
+					}//if
+				}//for %>
+				<!-- 다음 페이지 -->
+				<li class="page-item">
+					<% if(nowPage<totalPage){//다음페이지가 없을 경우
+					%>
+						<a href="index.jsp?nowPage=<%=nowPage+1%>" class="page-link">next</a>
+					<%}
+					%>
+				</li>
 			</ul>
-			<!-- 이미지 목록 만들기 -->
-			<div class="carousel-inner">
-				<div class="carousel-item active">
-					<img src="img/banner1.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>라이언</h2>
-						<p>카카오 프렌즈 대장</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner2.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피</h2>
-						<p>생일파티</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner3.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피2</h2>
-						<p>지붕 위에</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner4.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피3</h2>
-						<p>바다</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner5.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피3</h2>
-						<p>바다</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner6.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피3</h2>
-						<p>바다</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner7.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피3</h2>
-						<p>바다</p>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<img src="img/banner8.jpg"/>
-					<!-- 이미지 위에 설명쓰기 -->
-					<div class="carousel-caption">
-						<h2>스누피3</h2>
-						<p>바다</p>
-					</div>
-				</div>
-			</div>
-			<!-- 좌우 컨트롤러 -->
-			<a href="#slideImg" class="carousel-control-prev" data-slide="prev"><span class="carousel-control-prev-icon"></span></a>
-			<a href="#slideImg" class="carousel-control-next" data-slide="next"><span class="carousel-control-next-icon"></span></a>
-		</div><!-- carousel -->	
-	</div>
+		</div>
+	<!-- footer include -->
+	<footer>
+		<%@ include file="footer.jspf" %>
+	</footer>
 </div>
 </body>
 </html>
