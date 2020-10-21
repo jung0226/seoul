@@ -14,7 +14,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="api/bootstrap.min.js"></script>
 
-<script src="api/jquery.easing.1.3.js"></script>
+<script src="api/jquery-3.4.1.js"></script>
 <script src="api/jquery.bxslider.js"></script>
 <link rel="stylesheet" href="api/jquery.bxslider.css" type="text/css"/>
 <style>
@@ -23,10 +23,13 @@
 		width:800px;
 		margin:0 auto;		
 	}
+	#loginDiv{
+		text-align:right;
+	
+	}
 	#loginDiv form{
 		width:800px;
 		height:24px;
-		text-align:right;
 	}
 	#loginDiv a:link, #loginDiv a:visited, #loginDiv a:hover{
 		text-decoration:none;
@@ -120,24 +123,23 @@
 		overflow:hidden;/*넘침 숨기기*/
 		text-overflow:ellipsis;/*넘친 부분을 ...으로 표시*/		
 	}
-	#freeboard{
-		background-color: pink;
-	}
 	/*페이지 매기기*/
-	#paging{
-		padding: 10px auto;
-		background-color: yellow;
+	#paging {
+		overFlow:auto;
+		width:800px;
 	}
 	#paging ul{
 		overFlow:auto;
 		height:80px;
-		width:100%;
 	}
 	#paging li{
 		float:left;
 		width:60px;
 		text-align:center;
 		font-size:1.3em;
+	}
+	.pagination{
+		margin:10px 30%;
 	}
 </style>
 <script>
@@ -179,6 +181,9 @@
 <body>
 <div id="divContent">
 	<div id="loginDiv">
+	<%
+		String logStatus = (String)session.getAttribute("logStatus");
+		if(logStatus==null || logStatus.equals("")){ %>
 		<form method="post" id="logFrm" action="loginOk.jsp">
 			<input type="text" name="userid" id="userid" placeholder="아이디"/>
 			<input type="password" name="userpwd" id="userpwd" placeholder="비밀번호"/>
@@ -186,6 +191,12 @@
 			<a href="signup.jsp">회원가입</a>
 			<a href="center.jsp">고객센터</a>
 		</form>
+		<%}else if(logStatus!=null && logStatus.equals("Y")){ %>
+		
+			<%=session.getAttribute("username") %><a href="<%=request.getContextPath() %>/logout.jsp">로그아웃</a>
+		<%} 
+	%>
+		
 	</div>
 	<div id="logoDiv">
 		<a href="https://www.seoul.go.kr/main/index.jsp"><img src="img/seoul.png"/></a>
