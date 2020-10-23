@@ -51,7 +51,6 @@ public class FreeboardDAO extends DBConnection{
 		}
 		return result;
 	}
-	//글목록									현재 페이지, 1페이지당 표시할 레코드 수
 	public List<FreeboardVO> getAllRecord(int nowPage, int onePageRecord, int totalPage, int totalRecord) {
 		List<FreeboardVO> list = new ArrayList<FreeboardVO>();
 		try {
@@ -77,7 +76,7 @@ public class FreeboardDAO extends DBConnection{
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				FreeboardVO vo = new FreeboardVO();//레코드1개를 담는다.
+				FreeboardVO vo = new FreeboardVO();
 				vo.setNo(rs.getInt(1));
 				vo.setSubject(rs.getString(2));
 				vo.setUserid(rs.getString(3));

@@ -158,11 +158,11 @@
 			, slideWidth:800
 			, slideHeight:350
 			, speed:500 //변환속도
-			, auto:true //자동시작 (true, false(기본))
-			, randomStart:true //시작슬라이드 랜덤(true, false)
-			, captions:true //title속성의 값을 설명으로 표시한다.(true, false)
-			, infiniteLoop: true //반복여부(true, false)
-			, hideControlOnEnd: true//처음과 마지막에 컨트롤러 표시여부 설정(true, false)
+			, auto:true 
+			, randomStart:true 
+			, captions:true 
+			, infiniteLoop: true 
+			, hideControlOnEnd: true
 			//easing
 			, useCSS:true //easing사용여부 설정(true(easing안 함), false(easing사용))			
 		});
@@ -193,7 +193,7 @@
 		</form>
 		<%}else if(logStatus!=null && logStatus.equals("Y")){ %>
 		
-			<%=session.getAttribute("username") %><a href="<%=request.getContextPath() %>/logout.jsp">로그아웃</a>
+			<%=session.getAttribute("username") %>님<a href="<%=request.getContextPath() %>/logout.jsp"> 로그아웃</a>
 		<%} 
 	%>
 		
@@ -248,22 +248,20 @@
 	
 	<%
 	FreeboardDAO dao = new FreeboardDAO();
-	//--------------------------------------------------
-	int totalRecord = dao.getTotalRecord();	//총 레코드 수
-	int onePageRecord= 5;//한 페이지당 출력할 레코드 수	
-	int nowPage=1;//현재 페이지 번호
-	int totalPage=0; //총 페이지 수 
-	int onePageNum =5;//한번에 표시할 페이지 수
-	int startPage=1; //페이지 번호의 시작 번호
-	//--------------------------------------------------
-	//현재 페이지 정보 구하기
+	int totalRecord = dao.getTotalRecord();	
+	int onePageRecord= 5;
+	int nowPage=1;
+	int totalPage=0;
+	int onePageNum =5;
+	int startPage=1; 
+	//현재 페이지 정보
 	String nowPageStr = request.getParameter("nowPage");
 	if(nowPageStr != null){
 		nowPage=Integer.parseInt(nowPageStr);
 	}
-	//홈 페이지 수 계산하기
+	//홈 페이지 수 계산
 	totalPage = (int)Math.ceil(totalRecord/(double)onePageRecord);
-	//페이지번호의 시작 번호 구하기
+	//페이지번호의 시작 번호 
 	startPage = ((nowPage-1)/onePageNum*onePageNum)+1;
 	
 	//전체레코드 구하기

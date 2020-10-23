@@ -25,7 +25,6 @@
 	Connection conn = getConnection();
 	
 	//3. Statement생성(sql)
-	//String sql = "select count(userid) cnt from register where userid=? and userpwd=?";
 	String sql = "select userid, username from register where userid=? and userpwd=?";
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, userid);
@@ -43,7 +42,6 @@
 		</script>
 <%
 	}else{//로그인 성공
-		//로그인 성공여부를 세션에 기록한다.
 		session.setAttribute("logStatus","Y");
 		session.setAttribute("userid",rs.getString(1));
 		session.setAttribute("username",rs.getString(2));
